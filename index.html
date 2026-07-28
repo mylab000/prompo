@@ -9,11 +9,19 @@
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root{
-    --bg:#121016; --ink:#F3F0F5; --muted:#A79CB0; --muted-2:#6F6478;
-    --coral:#FF6B5E; --violet:#7C5CFF;
-    --grad: linear-gradient(120deg, var(--coral), var(--violet));
+    --accent-1:#FF6B5E; --accent-2:#7C5CFF;
+    --grad: linear-gradient(120deg, var(--accent-1), var(--accent-2));
     --ok:#4CC38A; --warn:#E3A93E; --err:#E15B4F;
+  }
+  :root, html[data-mode="dark"]{
+    --bg:#121016; --ink:#F3F0F5; --muted:#A79CB0; --muted-2:#6F6478;
     --shadow-d:rgba(0,0,0,0.6); --shadow-l:rgba(255,255,255,0.05);
+  }
+  html[data-mode="light"]{
+    --bg:#F1ECEF; --ink:#211C26; --muted:#6E6178; --muted-2:#9A8CA3;
+    --shadow-d:rgba(163,150,171,0.6); --shadow-l:rgba(255,255,255,0.95);
+  }
+  :root{
     --sh-out: 6px 6px 14px var(--shadow-d), -6px -6px 14px var(--shadow-l);
     --sh-out-sm: 3px 3px 8px var(--shadow-d), -3px -3px 8px var(--shadow-l);
     --sh-in: inset 3px 3px 7px var(--shadow-d), inset -3px -3px 7px var(--shadow-l);
@@ -49,7 +57,7 @@
   .tpl-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; }
   .tpl-card{ background:var(--bg); border:none; border-radius:15px; padding:13px; cursor:pointer; text-align:left;
     box-shadow:var(--sh-out-sm); }
-  .tpl-card.active{ box-shadow:var(--sh-out-sm), inset 0 0 0 2px var(--coral); }
+  .tpl-card.active{ box-shadow:var(--sh-out-sm), inset 0 0 0 2px var(--accent-1); }
   .tpl-card:active{ box-shadow:var(--sh-in-sm); }
   .tpl-emoji{ font-size:19px; }
   .tpl-name{ font-weight:600; font-size:12.5px; margin-top:7px; line-height:1.3; }
@@ -70,7 +78,7 @@
   .card{ background:var(--bg); border:none; border-radius:17px; padding:16px; box-shadow:var(--sh-out); }
   .checkbox-row{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink); cursor:pointer; }
   .checkbox-box{ width:19px; height:19px; border-radius:6px; background:var(--bg); box-shadow:var(--sh-in-sm);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--coral); }
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--accent-1); }
 
   /* output */
   .cta-btn{ width:100%; background:var(--grad); color:#fff; border:none; border-radius:14px; padding:14px;
@@ -83,7 +91,7 @@
   .output-box{ margin-top:14px; background:var(--bg); border:none; border-radius:15px;
     padding:15px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.65; color:var(--ink);
     white-space:pre-wrap; box-shadow:var(--sh-in); }
-  .output-box.accent{ box-shadow:var(--sh-in), inset 0 0 0 1.5px var(--violet); }
+  .output-box.accent{ box-shadow:var(--sh-in), inset 0 0 0 1.5px var(--accent-2); }
   .output-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
   .output-label{ font-family:'Sora',sans-serif; font-weight:700; font-size:12.5px; display:flex; align-items:center; gap:7px; }
   .copy-btn{ display:flex; align-items:center; gap:6px; background:var(--bg); border:none; box-shadow:var(--sh-out-sm);
@@ -118,6 +126,37 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
   .hist-del{ background:none; border:none; color:var(--muted-2); cursor:pointer; padding:2px; }
   .empty-hint{ font-size:12px; color:var(--muted-2); text-align:center; padding:16px 0; }
+
+  /* settings panel */
+  .icon-btn{ background:var(--bg); border:none; border-radius:12px; width:36px; height:36px; box-shadow:var(--sh-out-sm);
+    display:flex; align-items:center; justify-content:center; color:var(--accent-1); cursor:pointer; flex-shrink:0; }
+  .icon-btn:active{ box-shadow:var(--sh-in-sm); }
+  .settings-wrap{ position:relative; }
+  .settings-panel{ position:absolute; top:calc(100% + 9px); right:0; z-index:40; width:238px; background:var(--bg);
+    border-radius:16px; padding:15px; box-shadow:var(--sh-out); }
+  .settings-label{ font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--muted-2); margin-bottom:9px; }
+  .mode-toggle{ display:flex; gap:8px; }
+  .mode-btn{ flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 0; border:none;
+    border-radius:10px; background:var(--bg); box-shadow:var(--sh-in-sm); color:var(--muted); font-size:12px;
+    font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; }
+  .mode-btn svg{ width:13px; height:13px; }
+  .mode-btn.active{ color:var(--accent-1); box-shadow:var(--sh-in-sm), inset 0 0 0 1.5px var(--accent-1); }
+  .accent-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin-top:2px; }
+  .accent-swatch{ width:30px; height:30px; border-radius:50%; border:none; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; box-shadow:var(--sh-out-sm); color:#fff; padding:0; }
+  .accent-swatch svg{ width:13px; height:13px; }
+  .accent-swatch.active{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  /* product image upload */
+  .upload-box{ border:none; border-radius:13px; box-shadow:var(--sh-in-sm); padding:13px; text-align:center; }
+  .upload-preview{ width:100%; max-height:160px; object-fit:contain; border-radius:11px; box-shadow:var(--sh-out-sm); margin-bottom:10px; }
+  .upload-label-btn{ display:inline-flex; align-items:center; gap:7px; background:var(--bg); box-shadow:var(--sh-out-sm);
+    border-radius:11px; padding:9px 14px; font-size:12.5px; font-weight:600; color:var(--ink); cursor:pointer; }
+  .upload-actions{ display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .upload-actions .cta-btn{ padding:11px; font-size:12.5px; }
+  .upload-remove-btn{ flex:0 0 auto; width:42px; height:42px; padding:0; display:flex; align-items:center; justify-content:center; }
+  .upload-link-btn{ flex:0 0 auto; width:auto; height:42px; padding:0 15px; white-space:nowrap; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -127,9 +166,14 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       </div>
-      <div>
+      <div style="flex:1;">
         <div class="brand-name">PROMPO</div>
         <div class="brand-tag">Prompt AI untuk Kandungan Kreatif</div>
+      </div>
+      <div class="settings-wrap" id="settings-wrap">
+        <button class="icon-btn" id="settings-btn" onclick="toggleSettingsPanel(event)" title="Tetapan paparan">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
       </div>
     </div>
     <div class="cat-tabs" id="cat-tabs"></div>
@@ -155,7 +199,75 @@
     image: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
     trash: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M9 6V4h6v2M6 6l1 14h10l1-14"/></svg>',
     spin: '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-dasharray="34 20"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>',
+    upload: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+    eye: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
   };
+
+  // ================= theme system (mode + 10 themeable accent gradients) =================
+  const ACCENTS = [
+    { key:'koral',    label:'Koral Violet',   c1:'#FF6B5E', c2:'#7C5CFF' },
+    { key:'senja',    label:'Senja Pic',      c1:'#FF9A5A', c2:'#FF5E8E' },
+    { key:'lautan',   label:'Lautan Biru',    c1:'#4FA3C9', c2:'#4A7FD6' },
+    { key:'zamrud',   label:'Hutan Zamrud',   c1:'#34C77B', c2:'#1E9E8C' },
+    { key:'emas',     label:'Mentari Emas',   c1:'#FFC65C', c2:'#FF8A3D' },
+    { key:'firus',    label:'Firus Sian',     c1:'#38D9C9', c2:'#3FA6E0' },
+    { key:'neon',     label:'Neon Magenta',   c1:'#FF5CA8', c2:'#B347FF' },
+    { key:'lavender', label:'Lavender Malam', c1:'#A98CD8', c2:'#6C7FD8' },
+    { key:'ruby',     label:'Ruby Merah',     c1:'#FF5E5E', c2:'#FF2E7A' },
+    { key:'kelabu',   label:'Kelabu Elegan',  c1:'#C7C7CF', c2:'#8A8A94' },
+  ];
+  let themePrefs = { mode:'dark', accent:'koral' };
+  function loadThemePrefs() {
+    try { const raw = localStorage.getItem('prompo_theme'); if (raw) Object.assign(themePrefs, JSON.parse(raw)); } catch (e) {}
+  }
+  function saveThemePrefs() { try { localStorage.setItem('prompo_theme', JSON.stringify(themePrefs)); } catch (e) {} }
+  function applyTheme() {
+    document.documentElement.setAttribute('data-mode', themePrefs.mode);
+    const a = ACCENTS.find(x => x.key === themePrefs.accent) || ACCENTS[0];
+    document.documentElement.style.setProperty('--accent-1', a.c1);
+    document.documentElement.style.setProperty('--accent-2', a.c2);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) { const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim(); if (bg) meta.setAttribute('content', bg); }
+  }
+  function setMode(mode) { themePrefs.mode = mode; applyTheme(); saveThemePrefs(); renderSettingsPanel(); }
+  function setAccent(key) { themePrefs.accent = key; applyTheme(); saveThemePrefs(); renderSettingsPanel(); }
+  function toggleSettingsPanel(e) {
+    if (e) e.stopPropagation();
+    const wrap = document.getElementById('settings-wrap');
+    const existing = wrap.querySelector('.settings-panel');
+    if (existing) { existing.remove(); return; }
+    renderSettingsPanel();
+  }
+  function renderSettingsPanel() {
+    const wrap = document.getElementById('settings-wrap');
+    if (!wrap) return;
+    let panel = wrap.querySelector('.settings-panel');
+    if (!panel) { panel = document.createElement('div'); panel.className = 'settings-panel'; panel.onclick = ev => ev.stopPropagation(); wrap.appendChild(panel); }
+    let html = '<div class="settings-label">Mod Paparan</div><div class="mode-toggle">';
+    html += '<button class="mode-btn' + (themePrefs.mode === 'dark' ? ' active' : '') + '" onclick="setMode(\'dark\')">' + ICONS.moon + ' Malam</button>';
+    html += '<button class="mode-btn' + (themePrefs.mode === 'light' ? ' active' : '') + '" onclick="setMode(\'light\')">' + ICONS.sun + ' Siang</button>';
+    html += '</div><div class="settings-label" style="margin-top:13px;">Warna Aksen</div><div class="accent-grid">';
+    ACCENTS.forEach(a => {
+      html += '<button class="accent-swatch' + (themePrefs.accent === a.key ? ' active' : '') + '" style="background:linear-gradient(120deg,' + a.c1 + ',' + a.c2 + ');" title="' + a.label + '" onclick="setAccent(\'' + a.key + '\')">' + (themePrefs.accent === a.key ? ICONS.check : '') + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="settings-label" style="margin-top:13px;">Sumber AI</div>';
+    html += '<div class="checkbox-row" onclick="toggleManualMode()"><div class="checkbox-box">' + (manualMode ? ICONS.check : '') + '</div> Mod Manual (Claude.ai percuma)</div>';
+    html += '<div class="ai-note" style="margin-top:7px;">Bila aktif, ciri "Perhalusi" &amp; "Auto-Isi Gambar" guna claude.ai percuma (salin-tampal) — tiada kunci API/bayaran diperlukan.</div>';
+    panel.innerHTML = html;
+  }
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('#settings-wrap')) { const p = document.querySelector('.settings-panel'); if (p) p.remove(); }
+  });
+  let manualMode = false;
+  function loadManualMode() { try { return localStorage.getItem('prompo_manual_mode') === '1'; } catch (e) { return false; } }
+  function saveManualMode(v) { try { localStorage.setItem('prompo_manual_mode', v ? '1' : '0'); } catch (e) {} }
+  function toggleManualMode() { manualMode = !manualMode; saveManualMode(manualMode); renderSettingsPanel(); render(); }
+  manualMode = loadManualMode();
+  loadThemePrefs();
+  applyTheme();
 
   // ================= shared option lists =================
   const ASPECTS = ['9:16','1:1','16:9'];
@@ -222,9 +334,9 @@
 
   // ================= per-category form state =================
   let form = {
-    video: { platform:'TikTok', aspect:'9:16', duration:'15 saat', style:'Sinematik', mood:'Bertenaga', camera:'Tetap (Static)', light:'Semula Jadi', subject:'', extra:'', onscreen:'', cta:'', template:null },
-    affiliate: { platform:'TikTok Shop', aspect:'9:16', duration:'15 saat', style:'UGC Autentik', mood:'Bertenaga', camera:'Handheld/UGC', light:'Semula Jadi', subject:'', promo:'', price:'', disclosure:true, onscreen:'', extra:'', cta:'', template:null },
-    poster: { ratio:'1:1', style:'Moden Minimalis', headline:'', subtext:'', brandColor:'', extra:'', cta:'', template:null },
+    video: { platform:'TikTok', aspect:'9:16', duration:'15 saat', style:'Sinematik', mood:'Bertenaga', camera:'Tetap (Static)', light:'Semula Jadi', subject:'', extra:'', onscreen:'', cta:'', template:null, productImage:null, productImageMime:'', productImageDesc:'' },
+    affiliate: { platform:'TikTok Shop', aspect:'9:16', duration:'15 saat', style:'UGC Autentik', mood:'Bertenaga', camera:'Handheld/UGC', light:'Semula Jadi', subject:'', promo:'', price:'', disclosure:true, onscreen:'', extra:'', cta:'', template:null, productImage:null, productImageMime:'', productImageDesc:'' },
+    poster: { ratio:'1:1', style:'Moden Minimalis', headline:'', subtext:'', brandColor:'', extra:'', cta:'', template:null, productImage:null, productImageMime:'', productImageDesc:'' },
     komik: { artStyle:'Webtoon Berwarna', tone:'Kelakar', panels:'4', character:'', story:'', dialogue:'', template:null },
   };
 
@@ -258,6 +370,7 @@
     p += 'Visual style: ' + EN.style[f.style] + '. Mood: ' + EN.mood[f.mood] + '.\n';
     p += 'Camera: ' + EN.camera[f.camera] + '. Lighting: ' + EN.light[f.light] + '.\n';
     if (f.extra.trim()) p += 'Additional details: ' + f.extra.trim() + '.\n';
+    if (f.productImageDesc.trim()) p += 'Exact product appearance (from reference photo): ' + f.productImageDesc.trim() + '.\n';
     if (f.onscreen.trim()) p += 'On-screen text overlay (keep exactly as written, in Malay): "' + f.onscreen.trim() + '".\n';
     if (f.cta.trim()) p += 'End with a clear call-to-action: "' + f.cta.trim() + '".\n';
     p += '\nShot in high production quality, optimized for short-form vertical video platforms, with a strong hook in the first 2 seconds.';
@@ -272,6 +385,7 @@
     if (f.promo.trim()) p += 'Clearly highlight this offer: ' + f.promo.trim() + '.\n';
     if (f.price.trim()) p += 'Price/deal shown on screen: ' + f.price.trim() + '.\n';
     if (f.extra.trim()) p += 'Additional details: ' + f.extra.trim() + '.\n';
+    if (f.productImageDesc.trim()) p += 'Exact product appearance (from reference photo): ' + f.productImageDesc.trim() + '.\n';
     if (f.onscreen.trim()) p += 'On-screen text overlay (keep exactly as written, in Malay): "' + f.onscreen.trim() + '".\n';
     if (f.cta.trim()) p += 'End with a clear call-to-action: "' + f.cta.trim() + '".\n';
     if (f.disclosure) p += 'Include a brief on-screen affiliate disclosure (e.g. "#ad" or "Pautan affiliate") for transparency.\n';
@@ -287,6 +401,7 @@
     if (f.subtext.trim()) p += 'Supporting text (in Malay, keep exact): "' + f.subtext.trim() + '".\n';
     if (f.brandColor.trim()) p += 'Brand colors to use: ' + f.brandColor.trim() + '.\n';
     if (f.extra.trim()) p += 'Additional design elements: ' + f.extra.trim() + '.\n';
+    if (f.productImageDesc.trim()) p += 'Exact product appearance (from reference photo, feature it prominently): ' + f.productImageDesc.trim() + '.\n';
     if (f.cta.trim()) p += 'Call-to-action text (in Malay, keep exact): "' + f.cta.trim() + '".\n';
     p += '\nClean professional layout, strong visual hierarchy, balanced composition, print and social-media ready, high resolution.';
     return p + CONSTRAINTS_IMAGE;
@@ -442,7 +557,100 @@
     render();
   }
 
-  // ================= Google API key (shared by Veo + image generation) =================
+  function saveManualRefine() {
+    const ta = document.getElementById('manual-refine-paste');
+    if (!ta || !ta.value.trim()) return;
+    lastRefined = ta.value.trim();
+    render();
+  }
+
+  // ================= product image upload + auto-detect (Claude Vision, reuses Anthropic key) =================
+  let imageAnalyzing = false;
+  let imageAnalyzeError = '';
+
+  function handleImageUpload(inputEl) {
+    const file = inputEl.files && inputEl.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { imageAnalyzeError = 'Fail terlalu besar (had 8MB).'; render(); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const f = form[activeCategory];
+      f.productImage = String(reader.result).split(',')[1]; // base64 without the data: prefix
+      f.productImageMime = file.type || 'image/jpeg';
+      f.productImageDesc = '';
+      imageAnalyzeError = '';
+      render();
+    };
+    reader.readAsDataURL(file);
+  }
+  function removeProductImage() {
+    const f = form[activeCategory];
+    f.productImage = null; f.productImageMime = ''; f.productImageDesc = '';
+    imageAnalyzeError = '';
+    render();
+  }
+  const VISION_INSTRUCTION = 'You are a product photography analyst. Look at the uploaded product photo and describe it concisely but vividly for use inside an AI video/image generation prompt: exact colors, shape, materials, packaging, and any distinguishing design details. 2-3 sentences. Output ONLY the description in English, no preamble.';
+  async function analyzeProductImage() {
+    const f = form[activeCategory];
+    if (!f.productImage) return;
+    const keyInput = document.getElementById('api-key-input');
+    const key = keyInput ? keyInput.value.trim() : loadApiKey();
+    if (!key) { imageAnalyzeError = 'Sila masukkan kunci API Anthropic dahulu (medan sama dengan "Perhalusi dengan Claude AI" di bawah).'; render(); return; }
+    saveApiKey(key);
+    imageAnalyzing = true; imageAnalyzeError = '';
+    render();
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          max_tokens: 300,
+          system: VISION_INSTRUCTION,
+          messages: [ { role: 'user', content: [
+            { type: 'image', source: { type: 'base64', media_type: f.productImageMime, data: f.productImage } },
+            { type: 'text', text: 'Describe this product for a generation prompt.' },
+          ] } ],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) imageAnalyzeError = 'Kunci API tidak sah. Semak semula kunci anda.';
+        else if (res.status === 429) imageAnalyzeError = 'Had kadar API dicapai. Cuba sebentar lagi.';
+        else imageAnalyzeError = (data && data.error && data.error.message) ? data.error.message : 'Ralat tidak diketahui daripada API.';
+      } else {
+        const textBlock = (data.content || []).find(b => b.type === 'text');
+        f.productImageDesc = textBlock ? textBlock.text : '';
+        if (!f.productImageDesc) imageAnalyzeError = 'Tiada penerangan diterima.';
+      }
+    } catch (e) {
+      imageAnalyzeError = 'Gagal hubungi API (semak sambungan internet).';
+      console.error(e);
+    }
+    imageAnalyzing = false;
+    render();
+  }
+  function downloadProductImage() {
+    const f = form[activeCategory];
+    if (!f.productImage) return;
+    const ext = (f.productImageMime.split('/')[1] || 'jpg').replace('jpeg', 'jpg');
+    const a = document.createElement('a');
+    a.href = 'data:' + f.productImageMime + ';base64,' + f.productImage;
+    a.download = 'produk.' + ext;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+  function saveManualImageDesc() {
+    const ta = document.getElementById('manual-image-paste');
+    if (!ta || !ta.value.trim()) return;
+    form[activeCategory].productImageDesc = ta.value.trim();
+    render();
+  }
+
   function loadGoogleKey() { try { return localStorage.getItem('prompo_google_key') || ''; } catch (e) { return ''; } }
   function saveGoogleKey(key) { try { localStorage.setItem('prompo_google_key', key); } catch (e) {} }
 
@@ -661,6 +869,7 @@
     lastPrompt = ''; lastRefined = ''; refineError = ''; promptCheck = null;
     veoVideoUrl = ''; veoError = ''; veoStatus = '';
     imgResultUrl = ''; imgError = '';
+    imageAnalyzeError = '';
     render();
   }
 
@@ -796,11 +1005,21 @@
       html += renderPromptCheck();
 
       html += '<div class="card" style="margin-top:14px;">';
-      html += '<div class="output-label" style="margin-bottom:4px;">' + ICONS.wand + ' Perhalusi dengan Claude AI <span class="badge ai">AI</span></div>';
-      html += '<div class="ai-key-row"><input type="password" id="api-key-input" placeholder="Kunci API Anthropic (sk-ant-...)" value="' + escapeHtml(loadApiKey()) + '">';
-      html += '<button class="cta-btn ghost" style="width:auto;padding:0 16px;" onclick="refineWithAI()"' + (refining ? ' disabled' : '') + '>' + (refining ? ICONS.spin : 'Perhalusi') + '</button></div>';
-      html += '<div class="ai-note">Kunci API disimpan pada peranti ini sahaja dan dihantar terus ke api.anthropic.com dari pelayar anda. Dapatkan kunci di <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--violet);">console.anthropic.com</a>.</div>';
-      if (refineError) html += '<div class="ai-status err">' + refineError + '</div>';
+      if (manualMode) {
+        const manualText = (REFINE_SYSTEM[activeCategory] || REFINE_SYSTEM.video) + '\n\n---\n\nDraf prompt:\n' + lastPrompt;
+        html += '<div class="output-label" style="margin-bottom:4px;">' + ICONS.wand + ' Perhalusi (Mod Manual) <span class="badge">CLAUDE.AI PERCUMA</span></div>';
+        html += '<div class="ai-note">1) Salin arahan. 2) Buka claude.ai (percuma). 3) Tampal &amp; hantar. 4) Salin jawapan Claude, tampal balik di bawah.</div>';
+        html += '<div class="upload-actions" style="margin-top:10px;"><button class="copy-btn" id="copy-manual-refine" style="flex:1;justify-content:center;padding:11px;" onclick="copyText(' + jsAttr(manualText) + ',\'copy-manual-refine\')">' + ICONS.copy + ' Salin Arahan + Prompt</button>' +
+          '<a class="cta-btn ghost upload-link-btn" href="https://claude.ai/new" target="_blank" rel="noopener">Buka Claude.ai ↗</a></div>';
+        html += '<textarea id="manual-refine-paste" rows="3" placeholder="Tampal jawapan Claude di sini..." style="width:100%;background:var(--bg);border:none;box-shadow:var(--sh-in-sm);border-radius:10px;padding:9px 11px;color:var(--ink);font-family:\'Inter\',sans-serif;font-size:12.5px;margin-top:10px;resize:vertical;"></textarea>';
+        html += '<button class="cta-btn" style="margin-top:9px;" onclick="saveManualRefine()">Simpan sebagai Prompt Diperhalusi</button>';
+      } else {
+        html += '<div class="output-label" style="margin-bottom:4px;">' + ICONS.wand + ' Perhalusi dengan Claude AI <span class="badge ai">AI</span></div>';
+        html += '<div class="ai-key-row"><input type="password" id="api-key-input" placeholder="Kunci API Anthropic (sk-ant-...)" value="' + escapeHtml(loadApiKey()) + '">';
+        html += '<button class="cta-btn ghost" style="width:auto;padding:0 16px;" onclick="refineWithAI()"' + (refining ? ' disabled' : '') + '>' + (refining ? ICONS.spin : 'Perhalusi') + '</button></div>';
+        html += '<div class="ai-note">Kunci API disimpan pada peranti ini sahaja dan dihantar terus ke api.anthropic.com dari pelayar anda. Dapatkan kunci di <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--accent-2);">console.anthropic.com</a>. Tiada kunci? Guna <a href="javascript:void(0)" onclick="toggleManualMode()" style="color:var(--accent-2);">Mod Manual (percuma)</a>.</div>';
+        if (refineError) html += '<div class="ai-status err">' + refineError + '</div>';
+      }
       html += '</div>';
 
       if (lastRefined) {
@@ -834,7 +1053,7 @@
         html += '<div class="ai-note" style="margin-top:9px;">Klip asal: ' + nearestVeoDuration() + ' saat, nisbah ' + veoAspectRatio() + ' (had teknikal Veo).</div>';
         html += '<div class="ai-key-row" style="margin-top:9px;"><input type="password" id="google-key-input" placeholder="Kunci API Google AI (AIza...)" value="' + escapeHtml(loadGoogleKey()) + '">';
         html += '<button class="cta-btn ghost" style="width:auto;padding:0 16px;" onclick="generateVeoVideo()"' + (veoBusy ? ' disabled' : '') + '>' + (veoBusy ? ICONS.spin : 'Jana Video') + '</button></div>';
-        html += '<div class="ai-note">Kunci disimpan pada peranti ini sahaja. Dapatkan kunci di <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--violet);">aistudio.google.com/apikey</a>.</div>';
+        html += '<div class="ai-note">Kunci disimpan pada peranti ini sahaja. Dapatkan kunci di <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent-2);">aistudio.google.com/apikey</a>.</div>';
         if (veoStatus) html += '<div class="ai-status">' + ICONS.spin + ' ' + veoStatus + '</div>';
         if (veoError) html += '<div class="ai-status err">' + veoError + '</div>';
         if (veoVideoUrl) {
@@ -851,7 +1070,7 @@
         html += '<div class="ai-note">Guna prompt di atas untuk terus jana fail imej PNG, dengan Google Gemini image generation.</div>';
         html += '<div class="ai-key-row" style="margin-top:9px;"><input type="password" id="google-key-input" placeholder="Kunci API Google AI (AIza...)" value="' + escapeHtml(loadGoogleKey()) + '">';
         html += '<button class="cta-btn ghost" style="width:auto;padding:0 16px;" onclick="generateImage()"' + (imgBusy ? ' disabled' : '') + '>' + (imgBusy ? ICONS.spin : 'Jana Imej') + '</button></div>';
-        html += '<div class="ai-note">Kunci disimpan pada peranti ini sahaja. Dapatkan kunci di <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--violet);">aistudio.google.com/apikey</a>.</div>';
+        html += '<div class="ai-note">Kunci disimpan pada peranti ini sahaja. Dapatkan kunci di <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent-2);">aistudio.google.com/apikey</a>.</div>';
         if (imgError) html += '<div class="ai-status err">' + imgError + '</div>';
         if (imgResultUrl) {
           html += '<img class="result-image" src="' + imgResultUrl + '" alt="Hasil jana imej">';
@@ -881,10 +1100,45 @@
     return html;
   }
 
+  function renderImageUpload() {
+    const f = form[activeCategory];
+    let html = '<section><div class="sec-title">' + ICONS.upload + ' Gambar Produk (Pilihan)</div><div class="card">';
+    if (!f.productImage) {
+      html += '<div class="upload-box"><label class="upload-label-btn" for="product-image-input">' + ICONS.upload + ' Muat Naik Gambar</label>';
+      html += '<input type="file" id="product-image-input" accept="image/*" style="display:none;" onchange="handleImageUpload(this)">';
+      html += '<div class="ai-note" style="margin-top:9px;">Muat naik foto produk supaya AI dapat kesan rupa sebenar (warna, bentuk, bahan) dan sertakan terus dalam prompt.</div></div>';
+    } else {
+      html += '<img class="upload-preview" src="data:' + f.productImageMime + ';base64,' + f.productImage + '" alt="Pratonton produk">';
+      if (manualMode) {
+        html += '<div class="ai-note">Mod Manual: 1) Muat turun gambar. 2) Buka claude.ai, upload gambar &amp; tampal arahan. 3) Salin jawapan Claude, tampal balik di bawah.</div>';
+        html += '<div class="upload-actions" style="margin-top:9px;">';
+        html += '<button class="cta-btn ghost" style="flex:1;" onclick="downloadProductImage()">' + ICONS.upload + ' Muat Turun Gambar</button>';
+        html += '<button class="cta-btn ghost upload-remove-btn" onclick="removeProductImage()" title="Buang gambar">' + ICONS.trash + '</button>';
+        html += '</div>';
+        html += '<div class="upload-actions" style="margin-top:8px;"><button class="copy-btn" id="copy-vision-instr" style="flex:1;justify-content:center;padding:11px;" onclick="copyText(' + jsAttr(VISION_INSTRUCTION) + ',\'copy-vision-instr\')">' + ICONS.copy + ' Salin Arahan</button>' +
+          '<a class="cta-btn ghost upload-link-btn" href="https://claude.ai/new" target="_blank" rel="noopener">Buka ↗</a></div>';
+        html += '<textarea id="manual-image-paste" rows="2" placeholder="Tampal penerangan produk daripada Claude di sini..." style="width:100%;background:var(--bg);border:none;box-shadow:var(--sh-in-sm);border-radius:10px;padding:9px 11px;color:var(--ink);font-family:\'Inter\',sans-serif;font-size:12.5px;margin-top:9px;resize:vertical;"></textarea>';
+        html += '<button class="cta-btn" style="margin-top:9px;" onclick="saveManualImageDesc()">Guna Penerangan Ini</button>';
+      } else {
+        html += '<div class="upload-actions">';
+        html += '<button class="cta-btn ghost" style="flex:1;" onclick="analyzeProductImage()"' + (imageAnalyzing ? ' disabled' : '') + '>' + (imageAnalyzing ? ICONS.spin : ICONS.eye + ' Auto-Isi daripada Gambar') + '</button>';
+        html += '<button class="cta-btn ghost upload-remove-btn" onclick="removeProductImage()" title="Buang gambar">' + ICONS.trash + '</button>';
+        html += '</div>';
+        if (imageAnalyzeError) html += '<div class="ai-status err">' + imageAnalyzeError + '</div>';
+        html += '<div class="ai-note" style="margin-top:9px;">Guna kunci API Anthropic yang sama seperti "Perhalusi dengan Claude AI" di bawah. Tiada kunci? Guna <a href="javascript:void(0)" onclick="toggleManualMode()" style="color:var(--accent-2);">Mod Manual (percuma)</a>.</div>';
+      }
+      if (f.productImageDesc) html += '<div class="output-box" style="margin-top:10px;font-size:11.5px;">' + escapeHtml(f.productImageDesc) + '</div>';
+    }
+    html += '</div></section>';
+    return html;
+  }
+
   function render() {
     renderTabs();
     const root = document.getElementById('root');
     let html = renderTemplateSection();
+    const supportsImageUpload = (activeCategory === 'video' || activeCategory === 'affiliate' || activeCategory === 'poster');
+    if (supportsImageUpload) html += renderImageUpload();
     if (activeCategory === 'video') html += renderVideoForm();
     else if (activeCategory === 'affiliate') html += renderAffiliateForm();
     else if (activeCategory === 'poster') html += renderPosterForm();
