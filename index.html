@@ -1035,7 +1035,14 @@
       if (isVideoType) {
         html += '<div class="card" style="margin-top:14px;">';
         html += '<div class="output-label" style="margin-bottom:4px;">' + ICONS.film + ' Jana Video Sebenar dengan Veo <span class="badge veo">GOOGLE</span></div>';
-        html += '<div class="ai-note">Guna prompt di atas (versi diperhalusi jika ada) untuk terus jana fail MP4. Akaun Google berbayar berasingan — anggaran 30 saat hingga beberapa minit setiap video.</div>';
+        html += '<div class="ai-note">Guna prompt di atas (versi diperhalusi jika ada) untuk terus jana fail MP4.</div>';
+
+        const flowPromptText = lastRefined || lastPrompt;
+        html += '<div class="upload-actions" style="margin-top:10px;"><button class="copy-btn" id="copy-flow-prompt" style="flex:1;justify-content:center;padding:11px;" onclick="copyText(' + jsAttr(flowPromptText) + ',\'copy-flow-prompt\')">' + ICONS.copy + ' Salin Prompt</button>' +
+          '<a class="cta-btn ghost upload-link-btn" href="https://labs.google/fx/tools/flow" target="_blank" rel="noopener">Buka Flow ↗</a></div>';
+        html += '<div class="ai-note" style="margin-top:8px;">Ada langganan Google AI Pro/Ultra? Guna kredit Flow bulanan awak (percuma dalam had langganan) — salin prompt di atas, tampal terus dalam app/laman Flow. Lebih jimat untuk penjanaan kerap berbanding API di bawah.</div>';
+
+        html += '<div class="settings-label" style="margin-top:16px;">Atau Guna API Terus (Berbayar Berasingan)</div>';
         html += '<div class="field" style="margin-top:11px;margin-bottom:9px;"><label>Model</label><div class="chip-row">';
         VEO_MODELS.forEach(m => { html += '<button type="button" class="chip' + (veoModel === m.key ? ' active' : '') + '" onclick="setVeoModel(\'' + m.key + '\')">' + m.label + '</button>'; });
         html += '</div></div>';
