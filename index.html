@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PROMPO — Prompt Video AI untuk Kandungan Kreatif</title>
+<meta name="theme-color" content="#121016">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#121016; --surface:#1C1A22; --surface-2:#242029; --line:rgba(255,255,255,0.08);
+    --ink:#F3F0F5; --muted:#A79CB0; --muted-2:#6F6478;
+    --coral:#FF6B5E; --violet:#7C5CFF;
+    --grad: linear-gradient(120deg, var(--coral), var(--violet));
+    --ok:#4CC38A; --warn:#E3A93E; --err:#E15B4F;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+  .shell{ max-width:520px; margin:0 auto; min-height:100dvh; }
+
+  header{ position:sticky; top:0; z-index:20; background:rgba(18,16,22,0.92); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); padding:16px 18px 0; }
+  .brand{ display:flex; align-items:center; gap:11px; padding-bottom:14px; }
+  .brand-mark{ width:36px; height:36px; border-radius:11px; background:var(--grad); display:flex; align-items:center;
+    justify-content:center; flex-shrink:0; }
+  .brand-mark svg{ width:19px; height:19px; }
+  .brand-name{ font-family:'Sora',sans-serif; font-weight:800; font-size:20px; letter-spacing:0.2px; }
+  .brand-tag{ font-size:11px; color:var(--muted); margin-top:1px; }
+  .cat-tabs{ display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; -webkit-overflow-scrolling:touch; }
+  .cat-tabs::-webkit-scrollbar{ display:none; }
+  .cat-tab{ flex:0 0 auto; padding:8px 14px; border-radius:20px; font-size:12.5px; font-weight:600; white-space:nowrap;
+    background:var(--surface); color:var(--muted); border:1px solid var(--line); cursor:pointer; }
+  .cat-tab.active{ background:var(--grad); color:#fff; border-color:transparent; }
+  .cat-tab.disabled{ opacity:0.45; cursor:default; }
+
+  main{ padding:20px 18px 50px; }
+  section{ margin-bottom:26px; }
+  .sec-title{ font-family:'Sora',sans-serif; font-weight:700; font-size:14.5px; margin-bottom:11px; display:flex;
+    align-items:center; gap:8px; }
+  .sec-title .num{ width:20px; height:20px; border-radius:6px; background:var(--surface-2); display:flex;
+    align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); }
+
+  /* templates */
+  .tpl-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .tpl-card{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:13px; cursor:pointer;
+    text-align:left; }
+  .tpl-card.active{ border-color:transparent; background:linear-gradient(var(--surface),var(--surface)) padding-box,
+    var(--grad) border-box; border:1.5px solid transparent; }
+  .tpl-emoji{ font-size:19px; }
+  .tpl-name{ font-weight:600; font-size:12.5px; margin-top:7px; line-height:1.3; }
+  .tpl-desc{ font-size:10.5px; color:var(--muted); margin-top:3px; line-height:1.35; }
+
+  /* form groups */
+  .field{ margin-bottom:13px; }
+  .field label{ display:block; font-size:11px; font-weight:600; color:var(--muted); margin-bottom:7px;
+    text-transform:uppercase; letter-spacing:0.4px; }
+  .field input[type="text"], .field textarea{ width:100%; background:var(--surface); border:1px solid var(--line);
+    border-radius:11px; padding:11px 12px; color:var(--ink); font-family:'Inter',sans-serif; font-size:13.5px; resize:vertical; }
+  .field input::placeholder, .field textarea::placeholder{ color:var(--muted-2); }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ padding:8px 13px; border-radius:20px; font-size:12.5px; font-weight:500; background:var(--surface);
+    border:1px solid var(--line); color:var(--muted); cursor:pointer; }
+  .chip.active{ background:var(--grad); color:#fff; border-color:transparent; font-weight:600; }
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; }
+
+  /* output */
+  .cta-btn{ width:100%; background:var(--grad); color:#fff; border:none; border-radius:13px; padding:14px;
+    font-weight:700; font-size:14px; cursor:pointer; font-family:'Sora',sans-serif; display:flex; align-items:center;
+    justify-content:center; gap:8px; }
+  .cta-btn:active{ transform:scale(0.98); }
+  .cta-btn:disabled{ opacity:0.5; cursor:default; }
+  .cta-btn.ghost{ background:var(--surface-2); border:1px solid var(--line); }
+  .output-box{ margin-top:14px; background:var(--surface-2); border:1px solid var(--line); border-radius:14px;
+    padding:15px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.65; color:var(--ink);
+    white-space:pre-wrap; }
+  .output-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .output-label{ font-family:'Sora',sans-serif; font-weight:700; font-size:12.5px; display:flex; align-items:center; gap:7px; }
+  .copy-btn{ display:flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--line);
+    color:var(--ink); border-radius:9px; padding:6px 11px; font-size:11.5px; font-weight:600; cursor:pointer;
+    font-family:'Inter',sans-serif; }
+  .copy-btn.done{ color:var(--ok); border-color:var(--ok); }
+  .badge{ display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:3px 9px;
+    border-radius:20px; text-transform:uppercase; letter-spacing:0.4px; }
+  .badge.ai{ background:var(--grad); color:#fff; }
+
+  /* AI refine */
+  .ai-key-row{ display:flex; gap:8px; margin-top:10px; }
+  .ai-key-row input{ flex:1; }
+  .ai-note{ font-size:11px; color:var(--muted-2); margin-top:8px; line-height:1.5; }
+  .ai-status{ font-size:12px; margin-top:10px; display:flex; align-items:center; gap:8px; }
+  .ai-status.err{ color:var(--err); }
+  .ai-status.ok{ color:var(--ok); }
+  .spin{ animation:spin 0.9s linear infinite; width:14px; height:14px; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* history */
+  .hist-item{ background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:12px 13px;
+    margin-bottom:9px; cursor:pointer; }
+  .hist-top{ display:flex; align-items:center; justify-content:space-between; }
+  .hist-tpl{ font-weight:600; font-size:12.5px; }
+  .hist-time{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted-2); }
+  .hist-preview{ font-size:11px; color:var(--muted); margin-top:5px; line-height:1.4; overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .hist-del{ background:none; border:none; color:var(--muted-2); cursor:pointer; padding:2px; }
+  .empty-hint{ font-size:12px; color:var(--muted-2); text-align:center; padding:16px 0; }
+
+  .coming-soon{ text-align:center; padding:60px 20px; color:var(--muted); }
+  .coming-soon .big{ font-size:40px; margin-bottom:10px; }
+  .coming-soon .title{ font-family:'Sora',sans-serif; font-weight:700; font-size:16px; color:var(--ink); margin-bottom:6px; }
+  .coming-soon .sub{ font-size:12.5px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">PROMPO</div>
+        <div class="brand-tag">Prompt AI untuk Kandungan Kreatif</div>
+      </div>
+    </div>
+    <div class="cat-tabs" id="cat-tabs"></div>
+  </header>
+  <main id="root"></main>
+</div>
+
+<script>
+  const CATEGORIES = [
+    { key:'video', emoji:'🎬', label:'Video Media Sosial', ready:true },
+    { key:'affiliate', emoji:'💰', label:'Affiliate', ready:false },
+    { key:'poster', emoji:'🖼️', label:'Poster', ready:false },
+    { key:'komik', emoji:'📚', label:'Komik', ready:false },
+  ];
+  let activeCategory = 'video';
+
+  const ICONS = {
+    copy: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    check: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+    sparkle: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>',
+    wand: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M12.2 6.2L11 5M12.2 11.8L11 13"/><path d="M3 21l9-9"/><path d="M12.2 6.2a3 3 0 1 0 4 4"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M9 6V4h6v2M6 6l1 14h10l1-14"/></svg>',
+    spin: '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-dasharray="34 20"/></svg>',
+  };
+
+  // ---- template presets ----
+  const TEMPLATES = [
+    { key:'produk', emoji:'📦', name:'Tunjuk Produk', desc:'Fokus ciri & rupa produk', style:'Sinematik', mood:'Aspirasi', camera:'Tracking Shot', light:'Studio Terang', subjectHint:'Nama produk & ciri utamanya' },
+    { key:'unboxing', emoji:'🎁', name:'Unboxing', desc:'Buka kotak, tunjuk reaksi', style:'UGC Autentik', mood:'Santai', camera:'Handheld/UGC', light:'Semula Jadi', subjectHint:'Produk & kotak pembungkusan' },
+    { key:'sebelum', emoji:'🔄', name:'Sebelum & Selepas', desc:'Transformasi/hasil', style:'Minimalis', mood:'Bertenaga', camera:'Split-screen', light:'Semula Jadi', subjectHint:'Apa yang berubah/bertambah baik' },
+    { key:'testimoni', emoji:'🗣️', name:'Testimoni', desc:'Pelanggan bercakap ke kamera', style:'UGC Autentik', mood:'Emosional', camera:'Tetap (Static)', light:'Semula Jadi', subjectHint:'Pengalaman pelanggan sebenar' },
+    { key:'pov', emoji:'👀', name:'Trend/POV', desc:'Sudut pandang orang pertama', style:'Vibrant/Warna-warni', mood:'Kelakar', camera:'Handheld/UGC', light:'Neon/Malam', subjectHint:'Situasi/momen relatable' },
+    { key:'tutorial', emoji:'📝', name:'Tutorial Pantas', desc:'Langkah demi langkah', style:'Minimalis', mood:'Bertenaga', camera:'Overhead/Top-down', light:'Studio Terang', subjectHint:'Proses/cara buat sesuatu' },
+    { key:'jenama', emoji:'✨', name:'Cerita Jenama', desc:'Kisah di sebalik jenama', style:'Sinematik', mood:'Aspirasi', camera:'Drone/Aerial', light:'Golden Hour', subjectHint:'Misi/nilai jenama anda' },
+    { key:'hook', emoji:'⚡', name:'Hook Viral', desc:'3 saat pembuka yang tarik perhatian', style:'Vibrant/Warna-warni', mood:'Misteri', camera:'Zoom In Dramatik', light:'Dramatik/Kontras Tinggi', subjectHint:'Kejutan/soalan pembuka' },
+  ];
+
+  const PLATFORMS = ['TikTok','Instagram Reels','YouTube Shorts','Facebook Reels'];
+  const ASPECTS = ['9:16','1:1','16:9'];
+  const DURATIONS = ['5 saat','10 saat','15 saat','30 saat','60 saat'];
+  const STYLES = ['Sinematik','Minimalis','Vibrant/Warna-warni','Retro/Vintage','UGC Autentik','Mewah/Luxury','Animasi 3D'];
+  const MOODS = ['Bertenaga','Santai','Emosional','Kelakar','Aspirasi','Misteri'];
+  const CAMERAS = ['Tetap (Static)','Pan Lambat','Zoom In Dramatik','Handheld/UGC','Drone/Aerial','Tracking Shot','Overhead/Top-down','Split-screen'];
+  const LIGHTS = ['Semula Jadi','Golden Hour','Studio Terang','Neon/Malam','Dramatik/Kontras Tinggi'];
+
+  const EN = {
+    platform: { 'TikTok':'TikTok', 'Instagram Reels':'Instagram Reels', 'YouTube Shorts':'YouTube Shorts', 'Facebook Reels':'Facebook Reels' },
+    aspect: { '9:16':'vertical 9:16', '1:1':'square 1:1', '16:9':'horizontal 16:9' },
+    duration: { '5 saat':'5-second', '10 saat':'10-second', '15 saat':'15-second', '30 saat':'30-second', '60 saat':'60-second' },
+    style: { 'Sinematik':'cinematic', 'Minimalis':'minimalist', 'Vibrant/Warna-warni':'vibrant and colorful', 'Retro/Vintage':'retro vintage', 'UGC Autentik':'authentic UGC (user-generated content) style', 'Mewah/Luxury':'luxurious and premium', 'Animasi 3D':'3D animated' },
+    mood: { 'Bertenaga':'energetic', 'Santai':'relaxed and casual', 'Emosional':'emotional and heartfelt', 'Kelakar':'funny and lighthearted', 'Aspirasi':'aspirational', 'Misteri':'mysterious and intriguing' },
+    camera: { 'Tetap (Static)':'a static, locked-off shot', 'Pan Lambat':'a slow panning shot', 'Zoom In Dramatik':'a dramatic zoom-in', 'Handheld/UGC':'handheld, UGC-style movement', 'Drone/Aerial':'an aerial drone shot', 'Tracking Shot':'a smooth tracking shot', 'Overhead/Top-down':'a top-down overhead shot', 'Split-screen':'a split-screen transition' },
+    light: { 'Semula Jadi':'natural lighting', 'Golden Hour':'warm golden hour lighting', 'Studio Terang':'bright studio lighting', 'Neon/Malam':'neon night lighting', 'Dramatik/Kontras Tinggi':'dramatic high-contrast lighting' },
+  };
+
+  let form = { template:null, platform:'TikTok', aspect:'9:16', duration:'15 saat', style:'Sinematik', mood:'Bertenaga', camera:'Tetap (Static)', light:'Semula Jadi', subject:'', extra:'', onscreen:'', cta:'' };
+  let lastPrompt = '';
+  let lastRefined = '';
+  let refining = false;
+  let refineError = '';
+
+  function applyTemplate(key) {
+    const t = TEMPLATES.find(x => x.key === key);
+    if (!t) return;
+    form.template = key;
+    form.style = t.style; form.mood = t.mood; form.camera = t.camera; form.light = t.light;
+    render();
+  }
+  function setField(key, val) { form[key] = val; render(); }
+
+  function buildPrompt() {
+    const subject = (form.subject || '').trim() || 'the product or subject of the video';
+    const p1 = 'A ' + EN.duration[form.duration] + ' ' + EN.aspect[form.aspect] + ' social media video for ' + EN.platform[form.platform] + ', featuring: ' + subject + '.';
+    let p = p1 + '\n\n';
+    p += 'Visual style: ' + EN.style[form.style] + '. Mood: ' + EN.mood[form.mood] + '.\n';
+    p += 'Camera: ' + EN.camera[form.camera] + '. Lighting: ' + EN.light[form.light] + '.\n';
+    if (form.extra.trim()) p += 'Additional details: ' + form.extra.trim() + '.\n';
+    if (form.onscreen.trim()) p += 'On-screen text overlay (keep exactly as written, in Malay): "' + form.onscreen.trim() + '".\n';
+    if (form.cta.trim()) p += 'End with a clear call-to-action: "' + form.cta.trim() + '".\n';
+    p += '\nShot in high production quality, optimized for short-form vertical video platforms, with a strong hook in the first 2 seconds.';
+    return p;
+  }
+
+  function generatePrompt() {
+    lastPrompt = buildPrompt();
+    lastRefined = '';
+    refineError = '';
+    saveHistory(lastPrompt);
+    render();
+  }
+
+  function copyText(text, btnId) {
+    const done = () => {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      const original = btn.innerHTML;
+      btn.classList.add('done');
+      btn.innerHTML = ICONS.check + ' Disalin';
+      setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = original; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+    } else { fallbackCopy(text, done); }
+  }
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    cb();
+  }
+
+  // ---- Claude API refine (bring-your-own-key, called directly from browser) ----
+  function loadApiKey() { try { return localStorage.getItem('prompo_api_key') || ''; } catch (e) { return ''; } }
+  function saveApiKey(key) { try { localStorage.setItem('prompo_api_key', key); } catch (e) {} }
+
+  async function refineWithAI() {
+    const keyInput = document.getElementById('api-key-input');
+    const key = keyInput ? keyInput.value.trim() : loadApiKey();
+    if (!key) { refineError = 'Sila masukkan kunci API Anthropic dahulu.'; render(); return; }
+    saveApiKey(key);
+    refining = true; refineError = ''; render();
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          max_tokens: 700,
+          system: 'You are an expert AI video-prompt engineer for tools like Sora, Veo, Kling, and Runway. Refine the given draft prompt into a more detailed, cinematic, production-ready prompt, with a brief shot breakdown where useful. Keep any on-screen text exactly as given, in Malay, quoted. Output ONLY the final refined prompt in English, no preamble or explanation.',
+          messages: [ { role: 'user', content: lastPrompt } ],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) refineError = 'Kunci API tidak sah. Semak semula kunci anda.';
+        else if (res.status === 429) refineError = 'Had kadar API dicapai. Cuba sebentar lagi.';
+        else refineError = (data && data.error && data.error.message) ? data.error.message : 'Ralat tidak diketahui daripada API.';
+      } else {
+        const textBlock = (data.content || []).find(b => b.type === 'text');
+        lastRefined = textBlock ? textBlock.text : '';
+        if (!lastRefined) refineError = 'Tiada respons teks diterima.';
+      }
+    } catch (e) {
+      refineError = 'Gagal hubungi API (semak sambungan internet).';
+      console.error(e);
+    }
+    refining = false;
+    render();
+  }
+
+  // ---- history (local device only) ----
+  function loadHistory() { try { return JSON.parse(localStorage.getItem('prompo_history') || '[]'); } catch (e) { return []; } }
+  function saveHistory(prompt) {
+    const list = loadHistory();
+    const t = TEMPLATES.find(x => x.key === form.template);
+    list.unshift({ id: Date.now(), template: t ? t.name : 'Custom', subject: form.subject, prompt, time: Date.now() });
+    try { localStorage.setItem('prompo_history', JSON.stringify(list.slice(0, 25))); } catch (e) {}
+  }
+  function deleteHistory(id, e) {
+    if (e) e.stopPropagation();
+    const list = loadHistory().filter(h => h.id !== id);
+    try { localStorage.setItem('prompo_history', JSON.stringify(list)); } catch (e) {}
+    render();
+  }
+  function reuseHistory(id) {
+    const item = loadHistory().find(h => h.id === id);
+    if (!item) return;
+    lastPrompt = item.prompt; lastRefined = ''; refineError = '';
+    render();
+    const el = document.getElementById('output-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+  function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ---- render ----
+  function renderTabs() {
+    const el = document.getElementById('cat-tabs');
+    el.innerHTML = CATEGORIES.map(c =>
+      '<button class="cat-tab' + (c.key === activeCategory ? ' active' : '') + (c.ready ? '' : ' disabled') + '" onclick="' + (c.ready ? 'switchCategory(\'' + c.key + '\')' : '') + '">' +
+      c.emoji + ' ' + c.label + (c.ready ? '' : ' · Akan Datang') + '</button>'
+    ).join('');
+  }
+  function switchCategory(key) { activeCategory = key; render(); }
+
+  function segRow(options, current, field) {
+    return '<div class="chip-row">' + options.map(o =>
+      '<button type="button" class="chip' + (current === o ? ' active' : '') + '" onclick="setField(\'' + field + '\',' + JSON.stringify(o).replace(/"/g,'&quot;') + ')">' + o + '</button>'
+    ).join('') + '</div>';
+  }
+
+  function render() {
+    renderTabs();
+    const root = document.getElementById('root');
+    if (activeCategory !== 'video') {
+      const c = CATEGORIES.find(x => x.key === activeCategory);
+      root.innerHTML = '<div class="coming-soon"><div class="big">' + c.emoji + '</div><div class="title">' + c.label + ' — Akan Datang</div>' +
+        '<div class="sub">Modul ini belum dibina lagi. Buat masa ini, cuba modul Video Media Sosial dahulu.</div></div>';
+      return;
+    }
+
+    let html = '';
+
+    html += '<section><div class="sec-title"><span class="num">1</span> Templat Pantas</div><div class="tpl-grid">';
+    TEMPLATES.forEach(t => {
+      html += '<button type="button" class="tpl-card' + (form.template === t.key ? ' active' : '') + '" onclick="applyTemplate(\'' + t.key + '\')">';
+      html += '<div class="tpl-emoji">' + t.emoji + '</div><div class="tpl-name">' + t.name + '</div><div class="tpl-desc">' + t.desc + '</div>';
+      html += '</button>';
+    });
+    html += '</div></section>';
+
+    html += '<section><div class="sec-title"><span class="num">2</span> Butiran Video</div><div class="card">';
+    html += '<div class="field"><label>Platform</label>' + segRow(PLATFORMS, form.platform, 'platform') + '</div>';
+    html += '<div class="field"><label>Subjek / Produk</label><input type="text" id="f-subject" value="' + escapeHtml(form.subject) + '" placeholder="' + (TEMPLATES.find(t=>t.key===form.template)?.subjectHint || 'Cth: Serum vitamin C jenama saya') + '" oninput="form.subject=this.value"></div>';
+    html += '<div class="field"><label>Durasi</label>' + segRow(DURATIONS, form.duration, 'duration') + '</div>';
+    html += '<div class="field" style="margin-bottom:0;"><label>Nisbah Aspek</label>' + segRow(ASPECTS, form.aspect, 'aspect') + '</div>';
+    html += '</div></section>';
+
+    html += '<section><div class="sec-title"><span class="num">3</span> Gaya &amp; Suasana</div><div class="card">';
+    html += '<div class="field"><label>Gaya Visual</label>' + segRow(STYLES, form.style, 'style') + '</div>';
+    html += '<div class="field"><label>Mood</label>' + segRow(MOODS, form.mood, 'mood') + '</div>';
+    html += '<div class="field"><label>Pergerakan Kamera</label>' + segRow(CAMERAS, form.camera, 'camera') + '</div>';
+    html += '<div class="field" style="margin-bottom:0;"><label>Pencahayaan</label>' + segRow(LIGHTS, form.light, 'light') + '</div>';
+    html += '</div></section>';
+
+    html += '<section><div class="sec-title"><span class="num">4</span> Tambahan</div><div class="card">';
+    html += '<div class="field"><label>Teks Pada Skrin (Bahasa Malaysia)</label><input type="text" id="f-onscreen" value="' + escapeHtml(form.onscreen) + '" placeholder="Cth: Diskaun 50% hari ini!" oninput="form.onscreen=this.value"></div>';
+    html += '<div class="field"><label>Elemen / Props Tambahan</label><textarea id="f-extra" rows="2" placeholder="Cth: latar belakang dapur moden, warna jenama merah jambu" oninput="form.extra=this.value">' + escapeHtml(form.extra) + '</textarea></div>';
+    html += '<div class="field" style="margin-bottom:0;"><label>Call-to-Action</label><input type="text" id="f-cta" value="' + escapeHtml(form.cta) + '" placeholder="Cth: Klik pautan di bio sekarang" oninput="form.cta=this.value"></div>';
+    html += '</div></section>';
+
+    html += '<section id="output-section">';
+    html += '<button class="cta-btn" onclick="generatePrompt()">' + ICONS.sparkle + ' Jana Prompt</button>';
+
+    if (lastPrompt) {
+      html += '<div class="output-box"><div class="output-head"><div class="output-label">Prompt Draf</div>' +
+        '<button class="copy-btn" id="copy-draft" onclick="copyText(' + JSON.stringify(lastPrompt).replace(/"/g,'&quot;') + ',\'copy-draft\')">' + ICONS.copy + ' Salin</button></div>' +
+        escapeHtml(lastPrompt) + '</div>';
+
+      html += '<div class="card" style="margin-top:14px;">';
+      html += '<div class="output-label" style="margin-bottom:4px;">' + ICONS.wand + ' Perhalusi dengan Claude AI <span class="badge ai">AI</span></div>';
+      html += '<div class="ai-key-row"><input type="password" id="api-key-input" placeholder="Kunci API Anthropic (sk-ant-...)" value="' + escapeHtml(loadApiKey()) + '">';
+      html += '<button class="cta-btn ghost" style="width:auto;padding:0 16px;" onclick="refineWithAI()"' + (refining ? ' disabled' : '') + '>' + (refining ? ICONS.spin : 'Perhalusi') + '</button></div>';
+      html += '<div class="ai-note">Kunci API disimpan pada peranti ini sahaja dan dihantar terus ke api.anthropic.com dari pelayar anda — tidak melalui pelayan lain. Dapatkan kunci di <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--violet);">console.anthropic.com</a>.</div>';
+      if (refineError) html += '<div class="ai-status err">' + refineError + '</div>';
+      html += '</div>';
+
+      if (lastRefined) {
+        html += '<div class="output-box" style="margin-top:14px;box-shadow:0 0 0 1.5px transparent;background:linear-gradient(var(--surface-2),var(--surface-2)) padding-box, var(--grad) border-box;border:1.5px solid transparent;">';
+        html += '<div class="output-head"><div class="output-label">' + ICONS.wand + ' Prompt Diperhalusi</div>' +
+          '<button class="copy-btn" id="copy-refined" onclick="copyText(' + JSON.stringify(lastRefined).replace(/"/g,'&quot;') + ',\'copy-refined\')">' + ICONS.copy + ' Salin</button></div>';
+        html += escapeHtml(lastRefined) + '</div>';
+      }
+    }
+    html += '</section>';
+
+    const hist = loadHistory();
+    html += '<section><div class="sec-title"><span class="num">5</span> Riwayat Prompt</div>';
+    if (hist.length === 0) {
+      html += '<div class="empty-hint">Prompt yang dijana akan disimpan di sini.</div>';
+    } else {
+      hist.forEach(h => {
+        html += '<div class="hist-item" onclick="reuseHistory(' + h.id + ')"><div class="hist-top"><div class="hist-tpl">' + escapeHtml(h.template) + (h.subject ? ' — ' + escapeHtml(h.subject) : '') + '</div>' +
+          '<button class="hist-del" onclick="deleteHistory(' + h.id + ', event)">' + ICONS.trash + '</button></div>' +
+          '<div class="hist-time">' + new Date(h.time).toLocaleString('ms-MY') + '</div>' +
+          '<div class="hist-preview">' + escapeHtml(h.prompt) + '</div></div>';
+      });
+    }
+    html += '</section>';
+
+    root.innerHTML = html;
+  }
+
+  render();
+</script>
+</body>
+</html>
