@@ -474,9 +474,9 @@
   function nearestVeoDuration() {
     const f = form[activeCategory];
     const secs = parseInt(f.duration, 10) || 8;
-    if (secs <= 4) return '4';
-    if (secs <= 6) return '6';
-    return '8';
+    if (secs <= 4) return 4;
+    if (secs <= 6) return 6;
+    return 8;
   }
   function veoAspectRatio() {
     const f = form[activeCategory];
